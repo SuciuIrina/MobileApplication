@@ -19,4 +19,5 @@ a grade for the book. A user can search in the list of books.
 IV. The user has the possibility to view a chart containing the prefferences that the users have in terms of book genders. He will see the percent of the
 users that like Romance, Thriller, Crime, History, SF etc.
 
-online support, animations?
+The online support means that the data is stroted on a server
+Animations mean that the transition from one screen to another is made in a nicer way

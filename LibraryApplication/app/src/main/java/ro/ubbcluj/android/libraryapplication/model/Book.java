@@ -12,15 +12,15 @@ public class Book {
     private String publisher;
     private int yearOfPublishing;
     private String description;
-    private double review;
+    private int rating;
 
 
-    public Book(String title, String author, String publisher, int yearOfPublishing, double review,String description) {
+    public Book(String title, String author, String publisher, int yearOfPublishing, int rating,String description) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.yearOfPublishing = yearOfPublishing;
-        this.review = review;
+        this.rating = rating;
         this.id =COUNTER++;
         this.description=description;
     }
@@ -73,16 +73,16 @@ public class Book {
         this.yearOfPublishing = yearOfPublishing;
     }
 
-    public double getReview() {
-        return review;
+    public int getRating() {
+        return rating;
     }
 
-    public void setReview(double review) {
-        this.review = review;
+    public void setRating(int review) {
+        this.rating = review;
     }
 
     public String getMainInformation(){
-        return "Title: "+title+"\n Author: "+author+"\n Review: "+review;
+        return "Title: "+title+"\n Author: "+author+"\n Rating: "+rating;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Book {
                 ", publisher='" + publisher + '\'' +
                 ", yearOfPublishing=" + yearOfPublishing +
                 ", description='" + description + '\'' +
-                ", review=" + review +
+                ", rating=" + rating +
                 '}';
     }
 }

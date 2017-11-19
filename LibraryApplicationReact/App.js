@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {
-    Platform,
+    Button,
+    Platform, ScrollView,
     StyleSheet,
     Text,
-    View
+    View,
+    Alert, TouchableHighlight, FlatList
 } from 'react-native';
 
 
@@ -16,7 +18,7 @@ export default class App extends Component<{}> {
         this.getBookListElements=this.getBookListElements.bind(this);
 
         books = this.getBooks();
-        viweElement=this.getBookListElements(books);
+        viewElement=this.getBookListElements(books);
         this.state={books:books, viewElement:viewElement}
     }
 
@@ -67,7 +69,7 @@ export default class App extends Component<{}> {
                     renderItem={({item})=>
                         <View style={styles.listItemView}>
                             <Text style={styles.bigBlack}>
-                                {item.title+" "+ item.author+" "+item.rating}
+                                {"Title: "+item.title+"\nAuthor: "+ item.author+"\nRating: "+item.rating}
                             </Text>
                         </View>
                     }
@@ -79,7 +81,7 @@ export default class App extends Component<{}> {
 
     render(){
         return this.state.books ===null ? null:(
-            this.state.element
+            this.state.viewElement
         );
     }
 
@@ -95,10 +97,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     listItemView: {
-        padding: 10
+        padding: 5
     },
     bigBlack: {
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: 'bold',
     },
 });

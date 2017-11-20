@@ -5,21 +5,22 @@ import {
     StyleSheet,
     Text,
     View,
-    Alert, TouchableHighlight, FlatList, TextInput
+    Alert, TouchableHighlight, FlatList, TextInput,Linking
 } from 'react-native';
 
 export default class BookDetailComponent extends Component<{}> {
     constructor(props) {
         super(props);
 
-        this.handleUpdate=this.handleUpdate.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.sendEmail=this.sendEmail.bind(this);
 
         this.state = {
             title: this.props.book.title,
             author: this.props.book.author,
             publisher: this.props.book.publisher,
-            year: this.props.book.year+"",
-            rating: this.props.book.rating+"",
+            year: this.props.book.year + "",
+            rating: this.props.book.rating + "",
             description: this.props.book.description
         };
     }
@@ -34,6 +35,17 @@ export default class BookDetailComponent extends Component<{}> {
             rating: this.state.rating,
             description: this.state.description
         })
+    }
+
+    sendEmail() {
+        subject = "Book " + this.state.title + " details";
+        body = "Title: " + this.state.title + "\n" +
+            "Author: " + this.state.author + "\n" +
+            "Publisher: " + this.state.publisher + "\n" +
+            "Year: " + this.state.year + "\n" +
+            "Rating: " + this.state.rating + "\n" +
+            "Description: " + this.state.description;
+        Linking.openURL('mailto:suciuirinacj@yahoo.com?subject=' + subject + '&body=' + body);
     }
 
     render() {
@@ -86,17 +98,33 @@ export default class BookDetailComponent extends Component<{}> {
                         onChangeText={(text) => this.setState({description: text})}
                     />
                 </View>
+
+
                 <View style={styles.buttonContainer}>
-                    <Button
-                        style={styles.buttonStyle}
-                        title={"Update"}
-                        onPress={() => this.handleUpdate()}
-                    />
-                    <Button
-                        style={styles.buttonStyle}
-                        title={"Back"}
-                        onPress={() => this.props.onComeBack()}
-                    />
+                    <View style={{width: 130, padding: 5}}>
+                        <Button
+                            style={styles.buttonStyle}
+                            title={"Update"}
+                            color="#841584"
+                            onPress={() => this.handleUpdate()}
+                        />
+                    </View>
+                    <View style={{width: 130, padding: 5}}>
+                        <Button
+                            style={styles.buttonStyle}
+                            title={"Back"}
+                            color="#841584"
+                            onPress={() => this.props.onComeBack()}
+                        />
+                    </View>
+                    <View style={{width: 130, padding: 5}}>
+                        <Button
+                            style={styles.buttonStyle}
+                            title={"Send Email"}
+                            color="#841584"
+                            onPress={() => this.sendEmail()}
+                        />
+                    </View>
                 </View>
             </View>
         );
@@ -105,18 +133,15 @@ export default class BookDetailComponent extends Component<{}> {
 }
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1
+        flex: 1,
     },
     buttonContainer: {
-        flex: 1,
+        flex: 2,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
-    buttonStyle:{
-        flex:1,
-        padding:10,
-        width:30,
-        color:"#841584",
+    buttonStyle: {
+        flex: 1,
     },
 });

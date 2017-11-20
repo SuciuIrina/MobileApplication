@@ -5,7 +5,7 @@ package ro.ubbcluj.android.libraryapplication.model;
  */
 
 public class Book {
-    private static int COUNTER=0;
+    private static int COUNTER = 0;
     private int id;
     private String title;
     private String author;
@@ -15,14 +15,14 @@ public class Book {
     private int rating;
 
 
-    public Book(String title, String author, String publisher, int yearOfPublishing, int rating,String description) {
+    public Book(String title, String author, String publisher, int yearOfPublishing, int rating, String description) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.yearOfPublishing = yearOfPublishing;
         this.rating = rating;
-        this.id =COUNTER++;
-        this.description=description;
+        this.id = COUNTER++;
+        this.description = description;
     }
 
     public int getId() {
@@ -81,8 +81,8 @@ public class Book {
         this.rating = review;
     }
 
-    public String getMainInformation(){
-        return "Title: "+title+"\n Author: "+author+"\n Rating: "+rating;
+    public String getMainInformation() {
+        return "Title: " + title + "\n Author: " + author + "\n Rating: " + rating;
     }
 
     @Override

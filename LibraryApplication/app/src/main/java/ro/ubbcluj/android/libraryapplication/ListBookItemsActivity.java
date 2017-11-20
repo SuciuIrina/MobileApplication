@@ -21,11 +21,12 @@ public class ListBookItemsActivity extends AppCompatActivity {
     public static final List<Book> BOOKS;
     public static List<String> MAIN_INFORMATION_BOOKS;
     public static ArrayAdapter<String> ADAPTER;
-    static{
-        BOOKS=new ArrayList<>();
+
+    static {
+        BOOKS = new ArrayList<>();
         BOOKS.addAll(Arrays.asList(
-                new Book("Pe aripile Vantului","Margareth Michael","RAO",1990, 98,"Description"),
-                new Book("Departe de lumea dezlantuita","Thomas Hardy","Adevarul", 2010, 94,"Description")));
+                new Book("Pe aripile Vantului", "Margareth Michael", "RAO", 1990, 98, "Description"),
+                new Book("Departe de lumea dezlantuita", "Thomas Hardy", "Adevarul", 2010, 94, "Description")));
     }
 
     @Override
@@ -33,29 +34,30 @@ public class ListBookItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_book_items);
 
-        MAIN_INFORMATION_BOOKS=new ArrayList<>();
-        for(Book b:BOOKS){
+        MAIN_INFORMATION_BOOKS = new ArrayList<>();
+        for (Book b : BOOKS) {
             MAIN_INFORMATION_BOOKS.add(b.getMainInformation());
         }
 
 
-        ListView listViewBooks=(ListView) findViewById(R.id.listViewBooks);
+        ListView listViewBooks = (ListView) findViewById(R.id.listViewBooks);
         listViewBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-         @Override
-         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             Intent intent=new Intent(ListBookItemsActivity.this,BookDetailActivity.class);
-             intent.putExtra("MOVIE_DETAIL",position);
-             startActivity(intent);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ListBookItemsActivity.this, BookDetailActivity.class);
+                intent.putExtra("MOVIE_DETAIL", position);
+                startActivity(intent);
 
-         }});
-        ADAPTER=new ArrayAdapter<String>(listViewBooks.getContext(),
-                android.R.layout.simple_list_item_1,MAIN_INFORMATION_BOOKS);
+            }
+        });
+        ADAPTER = new ArrayAdapter<String>(listViewBooks.getContext(),
+                android.R.layout.simple_list_item_1, MAIN_INFORMATION_BOOKS);
         listViewBooks.setAdapter(ADAPTER);
 
     }
 
-    public void goToAddBookActivity(View view){
-        Intent intent=new Intent(this,AddBookActivity.class);
+    public void goToAddBookActivity(View view) {
+        Intent intent = new Intent(this, AddBookActivity.class);
         startActivity(intent);
     }
 }

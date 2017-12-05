@@ -104,17 +104,17 @@ export default class BookDetailComponent extends Component<{}> {
                     <View style={{width: 130, padding: 5}}>
                         <Button
                             style={styles.buttonStyle}
-                            title={"Update"}
+                            title={"Back"}
                             color="#841584"
-                            onPress={() => this.handleUpdate()}
+                            onPress={() => this.props.onComeBack()}
                         />
                     </View>
                     <View style={{width: 130, padding: 5}}>
                         <Button
                             style={styles.buttonStyle}
-                            title={"Back"}
+                            title={"Update"}
                             color="#841584"
-                            onPress={() => this.props.onComeBack()}
+                            onPress={() => this.handleUpdate()}
                         />
                     </View>
                     <View style={{width: 130, padding: 5}}>

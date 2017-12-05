@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    AsyncStorage,
     Button,
     Platform, ScrollView,
     StyleSheet,
@@ -9,11 +10,12 @@ import {
 } from 'react-native';
 
 import BookDetailComponent from "./BookDetailComponent";
+import AddBookComponent from "./AddBookComponent";
 
 export default class App extends Component<{}> {
     constructor(props) {
         super(props);
-        this.id=0;
+        this.counter=0;
 
         this.getBooks = this.getBooks.bind(this);
         this.getBooksForFlatList = this.getBooksForFlatList.bind(this);
@@ -22,16 +24,21 @@ export default class App extends Component<{}> {
         this.getBookDetailComponent = this.getBookDetailComponent.bind(this);
         this.setBookListView = this.setBookListView.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.setAddBookView=this.setAddBookView.bind(this);
+        this.addNewBook=this.addNewBook.bind(this);
 
-        books = this.getBooks();
+        books=this.getBooks();
+
         viewElement = this.getBookListElements(books);
         this.state = {books: books, viewElement: viewElement}
     }
 
+    
+
     getBooks() {
         return [
             {
-                id: 0,
+                id: this.counter+=1,
                 title: "Gone with the wind",
                 author: "Margareth Mitchael",
                 publisher: "RAO",
@@ -40,7 +47,7 @@ export default class App extends Component<{}> {
                 description: "Excellent book!"
             },
             {
-                id: 1,
+                id: this.counter+=1,
                 title: "A new day",
                 author: "Arthur Martin",
                 publisher: "Adevarul",
@@ -49,7 +56,7 @@ export default class App extends Component<{}> {
                 description: "Mysterious book with an interesting plot."
             },
             {
-                id: 2,
+                id: this.counter+=1,
                 title: "The art of getting by",
                 author: "Eva Miscente",
                 publisher: "Penguin",
@@ -86,11 +93,34 @@ export default class App extends Component<{}> {
                         </TouchableHighlight>
                     }
                 />
+                <View >
+                    <Button
+
+                        title={"Add book"}
+                        color="#841584"
+                        onPress={() => this.setAddBookView()}
+                    />
+                </View>
             </View>
         );
 
     }
 
+    addNewBook(book){
+        var books=this.state.books.slice();
+        books.push(book);
+        this.setState({books:books});
+    }
+    setAddBookView(){
+        newElement = <AddBookComponent
+            id={this.counter+=1}
+            addBook={this.addNewBook}
+            onComeBack={() => {
+                this.setBookListView()
+            }}
+        />;
+        this.setState({viewElement:newElement});
+    }
     setDetailView(bookId) {
         book = this.state.books.find(b => b.id === bookId);
         newElement = this.getBookDetailComponent(book);

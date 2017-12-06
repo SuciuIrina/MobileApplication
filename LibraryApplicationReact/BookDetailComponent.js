@@ -7,6 +7,8 @@ import {
     View,
     Alert, TouchableHighlight, FlatList, TextInput, Linking
 } from 'react-native';
+import DatePicker from 'react-native-datepicker'
+
 
 export default class BookDetailComponent extends Component<{}> {
     constructor(props) {
@@ -15,12 +17,13 @@ export default class BookDetailComponent extends Component<{}> {
         this.handleUpdate = this.handleUpdate.bind(this);
         this.sendEmail = this.sendEmail.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
+        this.alertDialogShow=this.alertDialogShow.bind(this);
 
         this.state = {
             title: this.props.book.title,
             author: this.props.book.author,
             publisher: this.props.book.publisher,
-            year: this.props.book.year + "",
+            date: this.props.book.date + "",
             rating: this.props.book.rating + "",
             description: this.props.book.description
         };
@@ -32,7 +35,7 @@ export default class BookDetailComponent extends Component<{}> {
             title: this.state.title,
             author: this.state.author,
             publisher: this.state.publisher,
-            year: this.state.year,
+            date: this.state.date,
             rating: this.state.rating,
             description: this.state.description
         })
@@ -43,7 +46,7 @@ export default class BookDetailComponent extends Component<{}> {
         body = "Title: " + this.state.title + "\n" +
             "Author: " + this.state.author + "\n" +
             "Publisher: " + this.state.publisher + "\n" +
-            "Year: " + this.state.year + "\n" +
+            "Date of aparition: " + this.state.date + "\n" +
             "Rating: " + this.state.rating + "\n" +
             "Description: " + this.state.description;
         Linking.openURL('mailto:suciuirinacj@yahoo.com?subject=' + subject + '&body=' + body);
@@ -53,9 +56,22 @@ export default class BookDetailComponent extends Component<{}> {
         this.props.onDelete(this.props.book.id);
     }
 
+    alertDialogShow(){
+        Alert.alert(
+            'Confirm your choice',
+            'Are you sure you want to remove this book?',
+            [
+                {text: 'YES', onPress: () => this.deleteBook()},
+                {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        )
+    }
+
     render() {
         return (
             <View style={styles.mainContainer}>
+
                 <View>
                     <Text>Title: </Text>
                     <TextInput
@@ -78,14 +94,32 @@ export default class BookDetailComponent extends Component<{}> {
                     />
                 </View>
                 <View>
-                    <Text>Year: </Text>
-                    <TextInput
-                        onChangeText={(text) => this.setState({year: text})}
-                        keyboardType={"numeric"}
-                        maxLength={4}
-                        value={this.state.year}
+                    <Text>Date of aparition: </Text>
+                    <DatePicker
+                        style={{width: 200}}
+                        date={this.state.date}
+                        mode="date"
+                        placeholder="select date"
+                        format="YYYY-MM-DD"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0
+                            },
+                            dateInput: {
+                                marginLeft: 36
+                            }
+                        }}
+                        onDateChange={(date) => {
+                            this.setState({date: date})
+                        }}
                     />
                 </View>
+
                 <View>
                     <Text>Rating: </Text>
                     <TextInput
@@ -138,8 +172,9 @@ export default class BookDetailComponent extends Component<{}> {
                             style={styles.buttonStyle}
                             title={"Delete"}
                             color="#841584"
-                            onPress={() => this.deleteBook()}
+                            onPress={() => this.alertDialogShow()}
                         />
+
                     </View>
                 </View>
             </View>

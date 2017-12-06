@@ -8,7 +8,10 @@
   },
   "dependencies": {
     "react": "^16.0.0",
-    "react-native": "^0.50.3"
+    "react-native": "^0.50.3",
+    "react-native-datepicker": "^1.6.0",
+    "react-native-dialog-component": "^0.2.17",
+    "react-native-popup-dialog": "^0.10.43"
   },
   "devDependencies": {
     "babel-jest": "21.2.0",

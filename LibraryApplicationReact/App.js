@@ -24,19 +24,20 @@ export default class App extends Component<{}> {
         this.handleUpdate = this.handleUpdate.bind(this);
         this.setAddBookView = this.setAddBookView.bind(this);
         this.addNewBook = this.addNewBook.bind(this);
-        this.clearAllData=this.clearAllData.bind(this);
-        this.deleteBook=this.deleteBook.bind(this);
+        this.deleteAllBooks = this.deleteAllBooks.bind(this);
+        this.deleteBook = this.deleteBook.bind(this);
+        this.alertDialogShow = this.alertDialogShow.bind(this);
 
 
         viewElement = this.getBookListElements([]);
         this.state = {books: [], viewElement: viewElement}
 
-        const secondThis=this;
+        const secondThis = this;
         AsyncStorage.getItem('books').then(v => {
-            if(v==undefined){
-                AsyncStorage.setItem('books',JSON.stringify([]));
-                AsyncStorage.setItem('counter','0');
-            }else{
+            if (v == undefined) {
+                AsyncStorage.setItem('books', JSON.stringify([]));
+                AsyncStorage.setItem('counter', '0');
+            } else {
                 viewElement = secondThis.getBookListElements(JSON.parse(v));
                 secondThis.setState({books: JSON.parse(v), viewElement: viewElement});
             }
@@ -48,6 +49,18 @@ export default class App extends Component<{}> {
     getBooksForFlatList(books) {
         books.map(x => x.key = x.id);
         return books;
+    }
+
+    alertDialogShow() {
+        Alert.alert(
+            'Confirm your choice',
+            'Are you sure you want to remove all books?',
+            [
+                {text: 'YES', onPress: () => this.deleteAllBooks()},
+                {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            {cancelable: false}
+        )
     }
 
 
@@ -87,7 +100,7 @@ export default class App extends Component<{}> {
                             style={styles.buttonStyle}
                             title={"Delete all"}
                             color="#841584"
-                            onPress={() => this.clearAllData()}
+                            onPress={() => this.alertDialogShow()}
                         />
                     </View>
                 </View>
@@ -98,22 +111,22 @@ export default class App extends Component<{}> {
 
     addNewBook(book) {
         var books = this.state.books.slice();
-        AsyncStorage.getItem('counter').then(v=>{
-            var newCounter=parseInt(v)+1;
-            book.id=newCounter;
+        AsyncStorage.getItem('counter').then(v => {
+            var newCounter = parseInt(v) + 1;
+            book.id = newCounter;
             books.push(book);
-            AsyncStorage.setItem('counter',""+newCounter);
-            AsyncStorage.setItem('books',JSON.stringify(books));
-            this.setState({books: books, viewElement:this.getBookListElements(books)});
+            AsyncStorage.setItem('counter', "" + newCounter);
+            AsyncStorage.setItem('books', JSON.stringify(books));
+            this.setState({books: books, viewElement: this.getBookListElements(books)});
         });
 
     }
 
-    deleteBook(bookId){
-        let filteredBooks=this.state.books;
-        filteredBooks=filteredBooks.filter(element => element.id != bookId);
-        this.setState({books:filteredBooks, viewElement:this.getBookListElements(filteredBooks)});
-        AsyncStorage.setItem('books',JSON.stringify(filteredBooks));
+    deleteBook(bookId) {
+        let filteredBooks = this.state.books;
+        filteredBooks = filteredBooks.filter(element => element.id != bookId);
+        this.setState({books: filteredBooks, viewElement: this.getBookListElements(filteredBooks)});
+        AsyncStorage.setItem('books', JSON.stringify(filteredBooks));
 
     }
 
@@ -152,14 +165,14 @@ export default class App extends Component<{}> {
     handleUpdate(book) {
         newBooks = this.state.books;
         newBooks[newBooks.findIndex(el => el.id === book.id)] = book;
-        AsyncStorage.setItem('books',JSON.stringify(newBooks));
+        AsyncStorage.setItem('books', JSON.stringify(newBooks));
         this.setState({books: newBooks, viewElement: this.getBookListElements(this.state.books)});
     }
 
-    clearAllData(){
-        AsyncStorage.setItem('books',JSON.stringify([]));
-        AsyncStorage.setItem('counter','0');
-        this.setState({books: [], viewElement:this.getBookListElements([])});
+    deleteAllBooks() {
+        AsyncStorage.setItem('books', JSON.stringify([]));
+        AsyncStorage.setItem('counter', '0');
+        this.setState({books: [], viewElement: this.getBookListElements([])});
     }
 
     render() {

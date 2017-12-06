@@ -25,6 +25,7 @@ export default class App extends Component<{}> {
         this.setAddBookView = this.setAddBookView.bind(this);
         this.addNewBook = this.addNewBook.bind(this);
         this.clearAllData=this.clearAllData.bind(this);
+        this.deleteBook=this.deleteBook.bind(this);
 
 
         viewElement = this.getBookListElements([]);
@@ -64,13 +65,14 @@ export default class App extends Component<{}> {
 
                             <View style={styles.listItemView}>
                                 <Text style={styles.bigBlack}>
-                                    {"ID "+item.id+"Title: " + item.title + "\nAuthor: " + item.author + "\nRating: " + item.rating}
+                                    {" Title: " + item.title + "\n Author: " + item.author + "\n Rating: " + item.rating}
                                 </Text>
                             </View>
 
                         </TouchableHighlight>
                     }
                 />
+
                 <View style={styles.buttonContainer}>
                     <View style={{width: 130, padding: 5}}>
                         <Button
@@ -105,6 +107,13 @@ export default class App extends Component<{}> {
             this.setState({books: books, viewElement:this.getBookListElements(books)});
         });
 
+    }
+
+    deleteBook(bookId){
+        let filteredBooks=this.state.books;
+        filteredBooks=filteredBooks.filter(element => element.id != bookId);
+        this.setState({books:filteredBooks, viewElement:this.getBookListElements(filteredBooks)});
+        AsyncStorage.setItem('books',JSON.stringify(filteredBooks));
 
     }
 
@@ -129,6 +138,7 @@ export default class App extends Component<{}> {
         return <BookDetailComponent
             book={book}
             onUpdate={this.handleUpdate}
+            onDelete={this.deleteBook}
             onComeBack={() => {
                 this.setBookListView()
             }}
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
     },
     listView: {
         padding: 10,
-        flex: 0.6,
+        flex: 0.8,
         backgroundColor: 'white',
     },
     listItemView: {
@@ -176,7 +186,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     buttonContainer: {
-        flex: 2,
+        flex: 0.2,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

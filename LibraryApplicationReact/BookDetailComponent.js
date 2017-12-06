@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Alert, TouchableHighlight, FlatList, TextInput,Linking
+    Alert, TouchableHighlight, FlatList, TextInput, Linking
 } from 'react-native';
 
 export default class BookDetailComponent extends Component<{}> {
@@ -13,7 +13,8 @@ export default class BookDetailComponent extends Component<{}> {
         super(props);
 
         this.handleUpdate = this.handleUpdate.bind(this);
-        this.sendEmail=this.sendEmail.bind(this);
+        this.sendEmail = this.sendEmail.bind(this);
+        this.deleteBook = this.deleteBook.bind(this);
 
         this.state = {
             title: this.props.book.title,
@@ -46,6 +47,10 @@ export default class BookDetailComponent extends Component<{}> {
             "Rating: " + this.state.rating + "\n" +
             "Description: " + this.state.description;
         Linking.openURL('mailto:suciuirinacj@yahoo.com?subject=' + subject + '&body=' + body);
+    }
+
+    deleteBook() {
+        this.props.onDelete(this.props.book.id);
     }
 
     render() {
@@ -123,6 +128,17 @@ export default class BookDetailComponent extends Component<{}> {
                             title={"Send Email"}
                             color="#841584"
                             onPress={() => this.sendEmail()}
+                        />
+                    </View>
+
+                </View>
+                <View style={styles.buttonContainer}>
+                    <View style={{width: 130, padding: 5}}>
+                        <Button
+                            style={styles.buttonStyle}
+                            title={"Delete"}
+                            color="#841584"
+                            onPress={() => this.deleteBook()}
                         />
                     </View>
                 </View>

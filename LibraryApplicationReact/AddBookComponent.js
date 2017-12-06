@@ -25,7 +25,6 @@ export default class AddBookComponent extends Component<{}> {
 
     addBook(){
         this.props.addBook({
-            id: this.props.id ,
             title: this.state.title,
             author: this.state.author,
             publisher: this.state.publisher,

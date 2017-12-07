@@ -27,10 +27,18 @@ export default class App extends Component<{}> {
         this.deleteAllBooks = this.deleteAllBooks.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
         this.alertDialogShow = this.alertDialogShow.bind(this);
+        this.getUsersHarcodated=this.getUsersHarcodated.bind(this);
+        this.getWishListHarcodated=this.getWishListHarcodated.bind(this);
+
+        users=this.getUsersHarcodated();
+        whislist=this.getWishListHarcodated();
+
+        AsyncStorage.setItem('users',JSON.stringify(users));
+        AsyncStorage.setItem('whislist',JSON.stringify(whislist));
 
 
         viewElement = this.getBookListElements([]);
-        this.state = {books: [], viewElement: viewElement}
+        this.state = {books: [], viewElement: viewElement, whishlist:whislist}
 
         const secondThis = this;
         AsyncStorage.getItem('books').then(v => {
@@ -41,7 +49,6 @@ export default class App extends Component<{}> {
                 viewElement = secondThis.getBookListElements(JSON.parse(v));
                 secondThis.setState({books: JSON.parse(v), viewElement: viewElement});
             }
-
         });
     }
 
@@ -62,6 +69,48 @@ export default class App extends Component<{}> {
             {cancelable: false}
         )
     }
+
+    getUsersHarcodated() {
+        return
+        [
+
+            {id: 1, username: "ana", email: "anamaria@yahoo.com"},
+            {id: 2, username: "andrei", email: "andreipopescu87@yahoo.com"},
+            {id: 3, username: "alex", email: "alex@yahoo.com"},
+            {id: 4, username: "ionescu", email: "ionescu@yahoo.com"},
+            {id: 5, username: "florescu", email: "florescu@yahoo.com"},
+            {id: 6, username: "simona", email: "simona@yahoo.com"},
+            {id: 7, username: "irina", email: "suciuirinacj@yahoo.com"},
+        ]
+    }
+
+    getWishListHarcodated(){
+        return
+        [
+            {usernameId:1,bookId:1,date:"2017-12-01"},
+            {usernameId:2,bookId:1,date:"2017-12-01"},
+            {usernameId:3,bookId:1,date:"2017-12-02"},
+            {usernameId:4,bookId:1,date:"2017-12-03"},
+            {usernameId:5,bookId:1,date:"2017-12-04"},
+            {usernameId:6,bookId:1,date:"2017-12-04"},
+            {usernameId:7,bookId:1,date:"2017-12-04"},
+            {usernameId:1,bookId:2,date:"2017-12-01"},
+            {usernameId:2,bookId:2,date:"2017-12-01"},
+            {usernameId:3,bookId:2,date:"2017-12-01"},
+            {usernameId:4,bookId:2,date:"2017-12-02"},
+            {usernameId:5,bookId:2,date:"2017-12-03"},
+            {usernameId:6,bookId:2,date:"2017-12-06"},
+            {usernameId:7,bookId:2,date:"2017-12-06"},
+            {usernameId:1,bookId:3,date:"2017-12-03"},
+            {usernameId:2,bookId:3,date:"2017-12-03"},
+            {usernameId:3,bookId:3,date:"2017-12-03"},
+            {usernameId:4,bookId:3,date:"2017-12-04"},
+            {usernameId:5,bookId:3,date:"2017-12-05"},
+            {usernameId:6,bookId:3,date:"2017-12-05"},
+            {usernameId:7,bookId:3,date:"2017-12-06"}
+
+        ]}
+
 
 
     getBookListElements(books) {
@@ -149,6 +198,7 @@ export default class App extends Component<{}> {
 
     getBookDetailComponent(book) {
         return <BookDetailComponent
+            wishlist={this.state.whishlist}
             book={book}
             onUpdate={this.handleUpdate}
             onDelete={this.deleteBook}

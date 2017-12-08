@@ -31,8 +31,11 @@ export default class BookDetailManagerComponent extends Component<{}> {
 
     }
 
+
     loadChartComponent(){
-        let element=<ChartComponent/>
+        let element=<ChartComponent
+            onComeBack={this.loadDetailComponent}
+        />
         this.setState({element:element})
     }
     loadDetailComponent(){
@@ -42,6 +45,7 @@ export default class BookDetailManagerComponent extends Component<{}> {
             onUpdate={this.props.onUpdate}
             onDelete={this.props.onDelete}
             onComeBack={this.props.onComeBack}
+            loadChart={this.loadChartComponent}
         />);
         this.setState({element:element})
     }

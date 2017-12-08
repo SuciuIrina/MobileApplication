@@ -24,34 +24,30 @@ const instructions = Platform.select({
 });
 
 export default class ChartComponent extends Component<{}> {
-    static navigationOptions = ({navigation}) => ({
-        title: `Bar (Column) - Basic`,
-    });
+    constructor(props){
+        super(props);
+
+        this.getDataChart=this.getDataChart.bind(this);
+    }
+    // static navigationOptions = ({navigation}) => ({
+    //     title: `Bar (Column) - Basic`,
+    // });
+
+    getDataChart(list){
+        let list1=list;
+        let dataChart=[];
+        while(list1.length > 0){
+            let date=list1[0].date;
+            let counter=list.filter(element => element.date==date).length;
+            dataChart.push([{"name":date,"v":counter}]);
+            list1=list1.filter(element => element.date!=date);
+        }
+
+        return dataChart;
+    }
 
     render() {
-        let data = [
-            [{
-                "v": 49,
-                "name": "apple"
-            }, {
-                "v": 42,
-                "name": "apple"
-            }],
-            [{
-                "v": 69,
-                "name": "banana"
-            }, {
-                "v": 62,
-                "name": "banana"
-            }],
-            [{
-                "v": 29,
-                "name": "grape"
-            }, {
-                "v": 15,
-                "name": "grape"
-            }]
-        ]
+        let data = this.getDataChart(this.props.wishlist);
 
         let options = {
             width: 300,

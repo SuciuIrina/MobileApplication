@@ -31,8 +31,8 @@ export default class App extends Component<{}> {
         this.getUsersHarcodated=this.getUsersHarcodated.bind(this);
         this.getWishListHarcodated=this.getWishListHarcodated.bind(this);
 
-        users=this.getUsersHarcodated();
-        whislist=this.getWishListHarcodated();
+        var users=this.getUsersHarcodated();
+        var whislist=this.getWishListHarcodated();
 
         AsyncStorage.setItem('users',JSON.stringify(users));
         AsyncStorage.setItem('whislist',JSON.stringify(whislist));
@@ -72,9 +72,7 @@ export default class App extends Component<{}> {
     }
 
     getUsersHarcodated() {
-        return
-        [
-
+        return[
             {id: 1, username: "ana", email: "anamaria@yahoo.com"},
             {id: 2, username: "andrei", email: "andreipopescu87@yahoo.com"},
             {id: 3, username: "alex", email: "alex@yahoo.com"},
@@ -82,12 +80,11 @@ export default class App extends Component<{}> {
             {id: 5, username: "florescu", email: "florescu@yahoo.com"},
             {id: 6, username: "simona", email: "simona@yahoo.com"},
             {id: 7, username: "irina", email: "suciuirinacj@yahoo.com"},
-        ]
+        ];
     }
 
     getWishListHarcodated(){
-        return
-        [
+        return[
             {usernameId:1,bookId:1,date:"2017-12-01"},
             {usernameId:2,bookId:1,date:"2017-12-01"},
             {usernameId:3,bookId:1,date:"2017-12-02"},
@@ -109,8 +106,8 @@ export default class App extends Component<{}> {
             {usernameId:5,bookId:3,date:"2017-12-05"},
             {usernameId:6,bookId:3,date:"2017-12-05"},
             {usernameId:7,bookId:3,date:"2017-12-06"}
-
-        ]}
+        ];
+    }
 
 
 
@@ -198,8 +195,10 @@ export default class App extends Component<{}> {
 
 
     getBookDetailComponent(book) {
+        var list=this.state.whishlist;
+        list=list.filter(element=> element.bookId==book.id);
         return <BookDetailManagerComponent
-            wishlist={this.state.whishlist}
+            wishlist={list}
             book={book}
             onUpdate={this.handleUpdate}
             onDelete={this.deleteBook}

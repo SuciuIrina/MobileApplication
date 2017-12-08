@@ -20,7 +20,7 @@ export default class BookDetailManagerComponent extends Component<{}> {
         this.loadDetailComponent=this.loadDetailComponent.bind(this);
 
         let element=(<BookDetailComponent
-            wishlist={this.props.whishlist}
+            wishlist={this.props.wishlist}
             book={this.props.book}
             onUpdate={this.props.onUpdate}
             onDelete={this.props.onDelete}
@@ -35,6 +35,7 @@ export default class BookDetailManagerComponent extends Component<{}> {
     loadChartComponent(){
         let element=<ChartComponent
             onComeBack={this.loadDetailComponent}
+            wishlist={this.props.wishlist}
         />
         this.setState({element:element})
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -13,33 +14,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 import static ro.ubbcluj.android.libraryapplication.R.id.listViewBooks;
 
 public class ListBookItemsActivity extends AppCompatActivity {
 
-    public static final List<Book> BOOKS;
-    public static List<String> MAIN_INFORMATION_BOOKS;
-    public static ArrayAdapter<String> ADAPTER;
-
-    static {
-        BOOKS = new ArrayList<>();
-        BOOKS.addAll(Arrays.asList(
-                new Book("Pe aripile Vantului", "Margareth Michael", "RAO", 1990, 98, "Description"),
-                new Book("Departe de lumea dezlantuita", "Thomas Hardy", "Adevarul", 2010, 94, "Description")));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_book_items);
 
-        MAIN_INFORMATION_BOOKS = new ArrayList<>();
-        for (Book b : BOOKS) {
-            MAIN_INFORMATION_BOOKS.add(b.getMainInformation());
+        List<String> mainInformationBooks= new ArrayList<>();
+        for (Book b : Globals.getBOOKS()) {
+            mainInformationBooks.add(b.getMainInformation());
         }
-
-
+        Globals.setMainInformationBooks(mainInformationBooks);
         ListView listViewBooks = (ListView) findViewById(R.id.listViewBooks);
         listViewBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -50,9 +41,10 @@ public class ListBookItemsActivity extends AppCompatActivity {
 
             }
         });
-        ADAPTER = new ArrayAdapter<String>(listViewBooks.getContext(),
-                android.R.layout.simple_list_item_1, MAIN_INFORMATION_BOOKS);
-        listViewBooks.setAdapter(ADAPTER);
+        ArrayAdapter bookAdapter = new ArrayAdapter<String>(listViewBooks.getContext(),
+                android.R.layout.simple_list_item_1, Globals.getMainInformationBooks());
+        Globals.setBookAdapter(bookAdapter);
+        listViewBooks.setAdapter(Globals.getBookAdapter());
 
     }
 

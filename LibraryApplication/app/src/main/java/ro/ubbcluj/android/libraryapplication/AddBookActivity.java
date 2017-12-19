@@ -1,18 +1,34 @@
 package ro.ubbcluj.android.libraryapplication;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Calendar;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 public class AddBookActivity extends AppCompatActivity {
 
+    private TextView dateTextView;
+    private DatePickerDialog.OnDateSetListener dateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
+
+        TextView yearText = (TextView) findViewById(R.id.dateTextView);
+        yearText.setText("Click to select a date");
+
+        initializeYearSelection();
+
     }
 
     public void createItem(View view) {
@@ -20,20 +36,22 @@ public class AddBookActivity extends AppCompatActivity {
         EditText authorText = (EditText) findViewById(R.id.authorText);
         EditText publisherText = (EditText) findViewById(R.id.publisherText);
         EditText reviewText = (EditText) findViewById(R.id.ratingText);
-        EditText yearText = (EditText) findViewById(R.id.yearText);
+        TextView yearText = (TextView) findViewById(R.id.dateTextView);
         EditText descriptionText = (EditText) findViewById(R.id.descriptionText);
+
 
         Book newBook = checkFileds(titleText, authorText, publisherText, reviewText, yearText, descriptionText);
         if (newBook != null) {
-            ListBookItemsActivity.BOOKS.add(newBook);
-            ListBookItemsActivity.MAIN_INFORMATION_BOOKS.add(newBook.getMainInformation());
-            ListBookItemsActivity.ADAPTER.notifyDataSetChanged();
+            Globals.addBook(newBook);
+            Globals.getMainInformationBooks().add(newBook.getMainInformation());
+            Globals.getBookAdapter().notifyDataSetChanged();
             finish();
         }
+
     }
 
     public Book checkFileds(EditText titleText, EditText authorText, EditText publisherText, EditText
-            reviewText, EditText yearText, EditText descriptionText) {
+            reviewText, TextView yearText, EditText descriptionText) {
         String title = titleText.getText() + "";
         String author = authorText.getText() + "";
         String publisher = publisherText.getText() + "";
@@ -41,7 +59,6 @@ public class AddBookActivity extends AppCompatActivity {
         String yearString = yearText.getText() + "";
         String reviewString = reviewText.getText() + "";
 
-        int year = 0;
         int review = 0;
         boolean flag = true;
 
@@ -59,17 +76,6 @@ public class AddBookActivity extends AppCompatActivity {
         }
         if (yearString.equals("")) {
             yearText.setError("Enter the year of publication!");
-        } else {
-            try {
-                year = Integer.parseInt(yearString);
-            } catch (NumberFormatException e) {
-                yearText.setError("Enter a year!");
-                flag = false;
-            }
-            if (year < 1000 || year > 2018) {
-                yearText.setError("Enter a valid year!");
-                flag = false;
-            }
         }
 
         if (reviewString.equals("")) {
@@ -89,8 +95,37 @@ public class AddBookActivity extends AppCompatActivity {
         }
 
         if (flag == true) {
-            return new Book(title, author, publisher, year, review, description);
+            return new Book(title, author, publisher, yearString, review, description);
         }
         return null;
+    }
+
+    public void initializeYearSelection(){
+        dateTextView=(TextView) findViewById(R.id.dateTextView);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        AddBookActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        dateListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = year + "-" + month + "-" + day;
+                dateTextView.setText(date);
+            }
+        };
     }
 }

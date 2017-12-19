@@ -1,38 +1,53 @@
 package ro.ubbcluj.android.libraryapplication;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Calendar;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 public class BookDetailActivity extends AppCompatActivity {
     private Book book;
     private int position;
 
+    private TextView dateTextView;
+    private DatePickerDialog.OnDateSetListener dateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
         position = getIntent().getIntExtra("MOVIE_DETAIL", -1);
-        book = ListBookItemsActivity.BOOKS.get(position);
+        book = Globals.getBook(position);
+
 
         EditText titleText = (EditText) findViewById(R.id.titleText);
         EditText authorText = (EditText) findViewById(R.id.authorText);
         EditText publisherText = (EditText) findViewById(R.id.publisherText);
         EditText reviewText = (EditText) findViewById(R.id.ratingText);
-        EditText yearText = (EditText) findViewById(R.id.yearText);
+        TextView yearText = (TextView) findViewById(R.id.dateTextView);
         EditText descriptionText = (EditText) findViewById(R.id.descriptionText);
 
         titleText.setText(book.getTitle());
         authorText.setText(book.getAuthor());
         publisherText.setText(book.getPublisher());
         reviewText.setText(String.valueOf(book.getRating()));
-        yearText.setText(String.valueOf(book.getYearOfPublishing()));
+        yearText.setText(book.getYearOfPublishing());
         descriptionText.setText(book.getDescription());
+
+        initializeYearSelection();
     }
 
 
@@ -41,7 +56,7 @@ public class BookDetailActivity extends AppCompatActivity {
         EditText authorText = (EditText) findViewById(R.id.authorText);
         EditText publisherText = (EditText) findViewById(R.id.publisherText);
         EditText reviewText = (EditText) findViewById(R.id.ratingText);
-        EditText yearText = (EditText) findViewById(R.id.yearText);
+        TextView yearText = (TextView) findViewById(R.id.dateTextView);
         EditText descriptionText = (EditText) findViewById(R.id.descriptionText);
 
         String title = titleText.getText() + "";
@@ -64,12 +79,38 @@ public class BookDetailActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(email, "Choose an Email client :"));
     }
 
+    public void deleteBook(View view){
+        AlertDialog.Builder alert=new AlertDialog.Builder(this);
+        alert.setMessage("Are you sure you want to delete this book?");
+        alert.setCancelable(false);
+
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Globals.removeBook(position);
+                Globals.getMainInformationBooks().remove(position);
+                Globals.getBookAdapter().notifyDataSetChanged();
+                finish();
+            }
+        });
+
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alert.create().show();
+
+    }
+
     public void saveInformation(View view) {
         EditText titleText = (EditText) findViewById(R.id.titleText);
         EditText authorText = (EditText) findViewById(R.id.authorText);
         EditText publisherText = (EditText) findViewById(R.id.publisherText);
         EditText reviewText = (EditText) findViewById(R.id.ratingText);
-        EditText yearText = (EditText) findViewById(R.id.yearText);
+        TextView yearText = (TextView) findViewById(R.id.dateTextView);
         EditText descriptionText = (EditText) findViewById(R.id.descriptionText);
 
         String title = titleText.getText() + "";
@@ -79,7 +120,7 @@ public class BookDetailActivity extends AppCompatActivity {
         String yearString = yearText.getText() + "";
         String reviewString = reviewText.getText() + "";
 
-        int year = 0;
+
         int review = 0;
         boolean flag = true;
 
@@ -97,17 +138,6 @@ public class BookDetailActivity extends AppCompatActivity {
         }
         if (yearString.equals("")) {
             yearText.setError("Enter the year of publication!");
-        } else {
-            try {
-                year = Integer.parseInt(yearString);
-            } catch (NumberFormatException e) {
-                yearText.setError("Enter a year!");
-                flag = false;
-            }
-            if (year < 1000 || year > 2018) {
-                yearText.setError("Enter a valid year!");
-                flag = false;
-            }
         }
 
         if (reviewString.equals("")) {
@@ -132,12 +162,40 @@ public class BookDetailActivity extends AppCompatActivity {
             book.setDescription(description);
             book.setRating(review);
             book.setPublisher(publisher);
-            book.setYearOfPublishing(year);
+            book.setYearOfPublishing(yearString);
 
-            ListBookItemsActivity.BOOKS.set(position, book);
-            ListBookItemsActivity.MAIN_INFORMATION_BOOKS.set(position, book.getMainInformation());
-            ListBookItemsActivity.ADAPTER.notifyDataSetChanged();
+            Globals.getMainInformationBooks().set(position, book.getMainInformation());
+            Globals.getBookAdapter().notifyDataSetChanged();
             finish();
         }
+    }
+
+    public void initializeYearSelection(){
+        dateTextView=(TextView) findViewById(R.id.dateTextView);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        BookDetailActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        dateListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = year + "-" + month + "-" + day;
+                dateTextView.setText(date);
+            }
+        };
     }
 }

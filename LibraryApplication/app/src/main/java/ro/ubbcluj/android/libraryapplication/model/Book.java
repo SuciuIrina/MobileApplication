@@ -1,17 +1,19 @@
 package ro.ubbcluj.android.libraryapplication.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by dell on 11/13/2017.
  */
-
+@Entity(tableName = "books")
 public class Book {
-    private static int COUNTER = 0;
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
     private String author;
     private String publisher;
-    //year-month-day
-    private String yearOfPublishing;
+    private String yearOfPublishing; //year-month-day
     private String description;
     private int rating;
 
@@ -22,7 +24,6 @@ public class Book {
         this.publisher = publisher;
         this.yearOfPublishing = yearOfPublishing;
         this.rating = rating;
-        this.id = COUNTER++;
         this.description = description;
     }
 

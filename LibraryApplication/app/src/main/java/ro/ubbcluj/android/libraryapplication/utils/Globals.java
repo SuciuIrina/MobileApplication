@@ -2,47 +2,44 @@ package ro.ubbcluj.android.libraryapplication.utils;
 
 import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.repository.BookRepository;
 
 /**
  * Created by dell on 12/19/2017.
  */
 
 public class Globals {
-    private static final List<Book> BOOKS;
+    public static BookRepository bookRepository;
     private static List<String> MAIN_INFORMATION_BOOKS;
     private static ArrayAdapter<String> BOOK_ADAPTER;
 
 
-    static {
-        BOOKS = new ArrayList<>();
-        BOOKS.addAll(Arrays.asList(
-                new Book("Pe aripile Vantului", "Margareth Michael", "RAO", "1990-12-01", 98, "Description"),
-                new Book("Departe de lumea dezlantuita", "Thomas Hardy", "Adevarul", "2010-12-01", 94, "Description")));
+    public static Book getBookById(Integer id){
+        return  bookRepository.getBookById(id);
     }
 
-    public static Integer getBookListSize(){
-        return BOOKS.size();
-    }
-
-    public static Book getBook(Integer index){
-        return BOOKS.get(index);
+    public static Book getBookByIndex(Integer index){
+        return bookRepository.getBookByIndex(index);
     }
 
     public  static void addBook(Book b){
-        BOOKS.add(b);
+        bookRepository.add(b);
     }
 
-    public  static void  removeBook(Integer index){
-        BOOKS.remove(index);
+    public  static void  removeBook(Integer id){
+
+        bookRepository.delete(id);
+    }
+
+    public static void updateBook(Book book){
+        bookRepository.update(book);
     }
 
     public static List<Book> getBOOKS() {
-        return BOOKS;
+        return bookRepository.getRepo();
     }
 
     public static List<String> getMainInformationBooks() {
@@ -60,4 +57,6 @@ public class Globals {
     public static void setBookAdapter(ArrayAdapter<String> bookAdapter) {
         BOOK_ADAPTER = bookAdapter;
     }
+
+
 }

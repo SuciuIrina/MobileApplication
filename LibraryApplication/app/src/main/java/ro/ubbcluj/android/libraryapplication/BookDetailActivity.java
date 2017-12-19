@@ -11,8 +11,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
@@ -30,7 +37,7 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
 
         position = getIntent().getIntExtra("MOVIE_DETAIL", -1);
-        book = Globals.getBook(position);
+        book = Globals.getBookByIndex(position);
 
 
         EditText titleText = (EditText) findViewById(R.id.titleText);
@@ -164,6 +171,7 @@ public class BookDetailActivity extends AppCompatActivity {
             book.setPublisher(publisher);
             book.setYearOfPublishing(yearString);
 
+            Globals.updateBook(book);
             Globals.getMainInformationBooks().set(position, book.getMainInformation());
             Globals.getBookAdapter().notifyDataSetChanged();
             finish();
@@ -197,5 +205,10 @@ public class BookDetailActivity extends AppCompatActivity {
                 dateTextView.setText(date);
             }
         };
+    }
+
+    public void viewChart(View view){
+        Intent intent=new Intent(this,ViewChartActivity.class);
+        startActivity(intent);
     }
 }

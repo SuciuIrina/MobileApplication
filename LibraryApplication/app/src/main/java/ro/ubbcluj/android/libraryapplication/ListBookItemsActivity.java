@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.repository.AppDatabase;
+import ro.ubbcluj.android.libraryapplication.repository.BookRepository;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 import static ro.ubbcluj.android.libraryapplication.R.id.listViewBooks;
@@ -26,7 +28,12 @@ public class ListBookItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_book_items);
 
-        List<String> mainInformationBooks= new ArrayList<>();
+        if (Globals.bookRepository == null) {
+            AppDatabase appDatabase = AppDatabase.getAppDatabase(getApplicationContext());
+            Globals.bookRepository = new BookRepository(appDatabase);
+        }
+
+        List<String> mainInformationBooks = new ArrayList<>();
         for (Book b : Globals.getBOOKS()) {
             mainInformationBooks.add(b.getMainInformation());
         }

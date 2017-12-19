@@ -139,38 +139,38 @@
 
     <Button
         android:id="@+id/sendMailButton"
-        android:layout_width="118dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="101dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:onClick="sendMail"
         android:text="Send Mail"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/saveInfoButton"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
     <Button
         android:id="@+id/saveInfoButton"
-        android:layout_width="114dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="101dp"
+        android:layout_height="44dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:onClick="saveInformation"
         android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toEndOf="@+id/sendMailButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
     <Button
         android:id="@+id/button"
-        android:layout_width="114dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="101dp"
+        android:layout_height="44dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:onClick="deleteBook"
         android:text="Delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
     <TextView
         android:id="@+id/dateTextView"
@@ -181,6 +181,19 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/yearTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/yearTextView" />
+
+    <Button
+        android:id="@+id/viewChartButton"
+        android:layout_width="101dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="viewChart"
+        android:text="Chart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendMailButton" />
 
 
 </android.support.constraint.ConstraintLayout>

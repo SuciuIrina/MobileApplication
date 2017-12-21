@@ -1,5 +1,6 @@
 package ro.ubbcluj.android.libraryapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -9,36 +10,70 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.model.Whishlist;
+import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 public class ViewChartActivity extends AppCompatActivity {
+    private Book book;
+    private int position;
+
+    private List<Whishlist> whishlistBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_chart);
 
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 0));
-        entries.add(new BarEntry(8f, 1));
-        entries.add(new BarEntry(6f, 2));
-        entries.add(new BarEntry(12f, 3));
-        entries.add(new BarEntry(18f, 4));
-        entries.add(new BarEntry(9f, 5));
+        position = getIntent().getIntExtra("BOOK_POSITION", -1);
+        book = Globals.getBookByIndex(position);
+        whishlistBook = Globals.whishlistRepository.getWhishlistByBookId(this.book.getId());
 
-        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+        List<String> dates = new ArrayList<>();
+        Map<String, Integer> chartData = new HashMap<>();
+
+        for (Whishlist w : whishlistBook) {
+            if (!dates.contains(w.getDate())) {
+                dates.add(w.getDate());
+            }
+        }
+
+        for (String d : dates) {
+            int counter = 0;
+            for (Whishlist w : whishlistBook) {
+                if (w.getDate().equals(d)) {
+                    counter++;
+                }
+            }
+            chartData.put(d, counter);
+        }
+
+        for (Integer i : chartData.values()) {
+            System.out.println(i);
+        }
+
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        int i = 0;
+        for (Integer value : chartData.values()) {
+            entries.add(new BarEntry(value, i));
+            i++;
+        }
+
+        BarDataSet dataset = new BarDataSet(entries, "Number of users that bought the book");
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
+        for(String s:chartData.keySet()){
+            labels.add(s);
+        }
 
         BarChart chart = new BarChart(getApplicationContext());
         setContentView(chart);
 
-        BarData data = new BarData(dataset);
+        BarData data = new BarData(labels, dataset);
         chart.setData(data);
     }
 }

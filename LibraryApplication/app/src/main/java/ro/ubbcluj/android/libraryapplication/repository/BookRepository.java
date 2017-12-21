@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
 
@@ -37,7 +36,6 @@ public class BookRepository {
 
     public void add(final Book book) {
         repo.add(book);
-
         executor.execute(new Runnable() {
             @Override
             public void run() {

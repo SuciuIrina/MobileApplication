@@ -6,16 +6,20 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.model.User;
+import ro.ubbcluj.android.libraryapplication.model.Whishlist;
 
 /**
  * Created by dell on 12/19/2017.
  */
-@Database(entities = {Book.class}, version = 6)
+@Database(entities = {Book.class,User.class, Whishlist.class}, version = 6)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
 
     public abstract BookDao bookDao();
+    public abstract UserDao userDao();
+    public abstract WhishlistDao whishlistDao();
 
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {

@@ -5,7 +5,10 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.model.Whishlist;
 import ro.ubbcluj.android.libraryapplication.repository.BookRepository;
+import ro.ubbcluj.android.libraryapplication.repository.UserRepository;
+import ro.ubbcluj.android.libraryapplication.repository.WhishlistRepository;
 
 /**
  * Created by dell on 12/19/2017.
@@ -13,8 +16,11 @@ import ro.ubbcluj.android.libraryapplication.repository.BookRepository;
 
 public class Globals {
     public static BookRepository bookRepository;
+    public static UserRepository userRepository;
+    public static WhishlistRepository whishlistRepository;
     private static List<String> MAIN_INFORMATION_BOOKS;
     private static ArrayAdapter<String> BOOK_ADAPTER;
+
 
 
     public static Book getBookById(Integer id){
@@ -26,6 +32,7 @@ public class Globals {
     }
 
     public  static void addBook(Book b){
+
         bookRepository.add(b);
     }
 
@@ -57,6 +64,5 @@ public class Globals {
     public static void setBookAdapter(ArrayAdapter<String> bookAdapter) {
         BOOK_ADAPTER = bookAdapter;
     }
-
 
 }

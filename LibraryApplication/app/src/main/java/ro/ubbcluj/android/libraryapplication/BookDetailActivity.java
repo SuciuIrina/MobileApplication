@@ -21,8 +21,10 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.model.Whishlist;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 public class BookDetailActivity extends AppCompatActivity {
@@ -36,9 +38,8 @@ public class BookDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        position = getIntent().getIntExtra("MOVIE_DETAIL", -1);
+        position = getIntent().getIntExtra("BOOK_DETAIL", -1);
         book = Globals.getBookByIndex(position);
-
 
         EditText titleText = (EditText) findViewById(R.id.titleText);
         EditText authorText = (EditText) findViewById(R.id.authorText);
@@ -209,6 +210,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
     public void viewChart(View view){
         Intent intent=new Intent(this,ViewChartActivity.class);
+        intent.putExtra("BOOK_POSITION",position);
         startActivity(intent);
     }
 }

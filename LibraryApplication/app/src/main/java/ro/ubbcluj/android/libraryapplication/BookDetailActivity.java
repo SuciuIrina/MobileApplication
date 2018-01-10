@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import ro.ubbcluj.android.libraryapplication.firebase.FirebaseServiceBooks;
 import ro.ubbcluj.android.libraryapplication.model.Book;
 import ro.ubbcluj.android.libraryapplication.model.Whishlist;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
@@ -39,7 +40,7 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
 
         position = getIntent().getIntExtra("BOOK_DETAIL", -1);
-        book = Globals.getBookByIndex(position);
+        book = Globals.bookRepository.getBookByIndex(position);
 
         EditText titleText = (EditText) findViewById(R.id.titleText);
         EditText authorText = (EditText) findViewById(R.id.authorText);
@@ -95,7 +96,12 @@ public class BookDetailActivity extends AppCompatActivity {
         alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Globals.removeBook(position);
+                Book book=Globals.bookRepository.getBookByIndex(position);
+
+                FirebaseServiceBooks firebaseServiceBooks=new FirebaseServiceBooks();
+                firebaseServiceBooks.deleteBook(book.getFirebaseKey());
+
+                Globals.bookRepository.delete(book.getId());
                 Globals.getMainInformationBooks().remove(position);
                 Globals.getBookAdapter().notifyDataSetChanged();
                 finish();
@@ -172,7 +178,10 @@ public class BookDetailActivity extends AppCompatActivity {
             book.setPublisher(publisher);
             book.setYearOfPublishing(yearString);
 
-            Globals.updateBook(book);
+            FirebaseServiceBooks firebaseServiceBooks=new FirebaseServiceBooks();
+            firebaseServiceBooks.updateBook(book);
+
+            Globals.bookRepository.update(book);
             Globals.getMainInformationBooks().set(position, book.getMainInformation());
             Globals.getBookAdapter().notifyDataSetChanged();
             finish();

@@ -30,7 +30,7 @@ public class ViewChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_chart);
 
         position = getIntent().getIntExtra("BOOK_POSITION", -1);
-        book = Globals.getBookByIndex(position);
+        book = Globals.bookRepository.getBookByIndex(position);
         whishlistBook = Globals.whishlistRepository.getWhishlistByBookId(this.book.getId());
 
         List<String> dates = new ArrayList<>();

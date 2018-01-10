@@ -10,6 +10,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class Book {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private String firebaseKey;
     private String title;
     private String author;
     private String publisher;
@@ -81,6 +82,14 @@ public class Book {
 
     public void setRating(int review) {
         this.rating = review;
+    }
+
+    public String getFirebaseKey() {
+        return firebaseKey;
+    }
+
+    public void setFirebaseKey(String firebaseKey) {
+        this.firebaseKey = firebaseKey;
     }
 
     public String getMainInformation() {

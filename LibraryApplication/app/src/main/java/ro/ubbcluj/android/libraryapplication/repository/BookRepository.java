@@ -85,7 +85,7 @@ public class BookRepository {
         }
     }
 
-    public List<Book> getRepo() {
+    public List<Book> getAllBooks() {
         return repo;
     }
 

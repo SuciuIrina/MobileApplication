@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import ro.ubbcluj.android.libraryapplication.firebase.FirebaseServiceBooks;
 import ro.ubbcluj.android.libraryapplication.model.Book;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
@@ -42,7 +43,10 @@ public class AddBookActivity extends AppCompatActivity {
 
         Book newBook = checkFileds(titleText, authorText, publisherText, reviewText, yearText, descriptionText);
         if (newBook != null) {
-            Globals.addBook(newBook);
+            FirebaseServiceBooks firebaseServiceBooks=new FirebaseServiceBooks();
+            firebaseServiceBooks.addBook(newBook);
+
+            Globals.bookRepository.add(newBook);
             Globals.getMainInformationBooks().add(newBook.getMainInformation());
             Globals.getBookAdapter().notifyDataSetChanged();
             finish();

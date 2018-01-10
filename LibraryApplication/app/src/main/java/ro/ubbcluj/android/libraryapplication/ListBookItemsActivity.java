@@ -2,15 +2,18 @@ package ro.ubbcluj.android.libraryapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
@@ -22,15 +25,37 @@ import ro.ubbcluj.android.libraryapplication.repository.UserRepository;
 import ro.ubbcluj.android.libraryapplication.repository.WhishlistRepository;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
-import static ro.ubbcluj.android.libraryapplication.R.id.listViewBooks;
-
 public class ListBookItemsActivity extends AppCompatActivity {
 
+    private Button mLogOutButton;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_book_items);
+
+        mAuth=FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    startActivity(new Intent(ListBookItemsActivity.this, LoginActivity.class));
+                }
+            }
+        };
+
+
+        mLogOutButton=(Button)findViewById(R.id.signOutButton);
+        mLogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAuth.signOut();
+            }
+        });
 
         if (Globals.bookRepository == null) {
             AppDatabase appDatabase = AppDatabase.getAppDatabase(getApplicationContext());
@@ -79,6 +104,7 @@ public class ListBookItemsActivity extends AppCompatActivity {
             }
         }
 
+
         List<String> mainInformationBooks = new ArrayList<>();
         for (Book b : Globals.getBOOKS()) {
             mainInformationBooks.add(b.getMainInformation());
@@ -98,7 +124,12 @@ public class ListBookItemsActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, Globals.getMainInformationBooks());
         Globals.setBookAdapter(bookAdapter);
         listViewBooks.setAdapter(Globals.getBookAdapter());
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     public void goToAddBookActivity(View view) {

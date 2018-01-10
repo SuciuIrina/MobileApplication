@@ -6,6 +6,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ro.ubbcluj.android.libraryapplication.model.Book;
+import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 /**
  * Created by dell on 12/19/2017.
@@ -47,8 +48,14 @@ public class BookRepository {
     public void update(final Book book) {
         Book newBook = null;
         for (Book b : repo) {
-            if (b.getId() == book.getId()) {
+            if (b.getFirebaseKey().equals(book.getFirebaseKey())) {
                 newBook = book;
+                b.setTitle(book.getTitle());
+                b.setAuthor(book.getAuthor());
+                b.setPublisher(book.getPublisher());
+                b.setYearOfPublishing(book.getYearOfPublishing());
+                b.setDescription(book.getDescription());
+                b.setRating(b.getRating());
                 break;
             }
         }
@@ -60,6 +67,7 @@ public class BookRepository {
         newBook.setDescription(book.getDescription());
         newBook.setRating(book.getRating());
 
+
         final Book bookUpdated = newBook;
         executor.execute(new Runnable() {
             @Override
@@ -67,11 +75,12 @@ public class BookRepository {
                 appDatabase.bookDao().update(bookUpdated);
             }
         });
+
     }
 
-    public void delete(final int bookId) {
+    public void delete(final String firebaseKey) {
         for (Book b : repo) {
-            if (b.getId() == bookId) {
+            if (b.getFirebaseKey().equals(firebaseKey) ) {
                 repo.remove(b);
                 final Book bookDelete = b;
                 executor.execute(new Runnable() {
@@ -89,9 +98,9 @@ public class BookRepository {
         return repo;
     }
 
-    public Book getBookById(final int id) {
+    public Book getBookByKey(final String key) {
         for (Book b : repo) {
-            if (b.getId() == id) {
+            if (b.getFirebaseKey().equals(key)) {
                 return b;
             }
         }

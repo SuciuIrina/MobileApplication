@@ -13,10 +13,17 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import ro.ubbcluj.android.libraryapplication.firebase.FirebaseServiceBooks;
 import ro.ubbcluj.android.libraryapplication.model.Book;
 import ro.ubbcluj.android.libraryapplication.model.User;
 import ro.ubbcluj.android.libraryapplication.model.Whishlist;
@@ -48,7 +55,6 @@ public class ListBookItemsActivity extends AppCompatActivity {
             }
         };
 
-
         mLogOutButton=(Button)findViewById(R.id.signOutButton);
         mLogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +74,7 @@ public class ListBookItemsActivity extends AppCompatActivity {
 
         List<String> mainInformationBooks = new ArrayList<>();
         for (Book b : Globals.bookRepository.getAllBooks()) {
-            mainInformationBooks.add(b.getMainInformation());
+            mainInformationBooks.add(b.mainInfo());
         }
         Globals.setMainInformationBooks(mainInformationBooks);
         ListView listViewBooks = (ListView) findViewById(R.id.listViewBooks);
@@ -85,6 +91,56 @@ public class ListBookItemsActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, Globals.getMainInformationBooks());
         Globals.setBookAdapter(bookAdapter);
         listViewBooks.setAdapter(Globals.getBookAdapter());
+
+        final FirebaseDatabase database=FirebaseDatabase.getInstance();
+        DatabaseReference ref=database.getReference("server");
+        DatabaseReference bookRef=ref.child("books");
+
+        bookRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+               Book book=dataSnapshot.getValue(Book.class);
+
+               for(int i=0;i<Globals.bookRepository.getAllBooks().size();i++){
+                   if(Globals.bookRepository.getBookByIndex(i).getFirebaseKey().equals(dataSnapshot.getKey())){
+                       Globals.bookRepository.update(book);
+                       Globals.getMainInformationBooks().set(i,book.mainInfo());
+                       Globals.getBookAdapter().notifyDataSetChanged();
+                   }
+               }
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String key=dataSnapshot.getKey();
+
+                for(int i=0;i<Globals.bookRepository.getAllBooks().size();i++){
+                    if(Globals.bookRepository.getBookByIndex(i).getFirebaseKey().equals(dataSnapshot.getKey())){
+                        Globals.bookRepository.delete(key);
+                        Globals.getMainInformationBooks().remove(i);
+                        Globals.getBookAdapter().notifyDataSetChanged();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override

@@ -101,7 +101,7 @@ public class BookDetailActivity extends AppCompatActivity {
                 FirebaseServiceBooks firebaseServiceBooks=new FirebaseServiceBooks();
                 firebaseServiceBooks.deleteBook(book.getFirebaseKey());
 
-                Globals.bookRepository.delete(book.getId());
+                Globals.bookRepository.delete(book.getFirebaseKey());
                 Globals.getMainInformationBooks().remove(position);
                 Globals.getBookAdapter().notifyDataSetChanged();
                 finish();
@@ -182,7 +182,7 @@ public class BookDetailActivity extends AppCompatActivity {
             firebaseServiceBooks.updateBook(book);
 
             Globals.bookRepository.update(book);
-            Globals.getMainInformationBooks().set(position, book.getMainInformation());
+            Globals.getMainInformationBooks().set(position, book.mainInfo());
             Globals.getBookAdapter().notifyDataSetChanged();
             finish();
         }

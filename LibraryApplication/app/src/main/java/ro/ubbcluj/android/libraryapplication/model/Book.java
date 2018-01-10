@@ -1,6 +1,7 @@
 package ro.ubbcluj.android.libraryapplication.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -14,10 +15,12 @@ public class Book {
     private String title;
     private String author;
     private String publisher;
-    private String yearOfPublishing; //year-month-day
+    private String yearOfPublishing;
     private String description;
     private int rating;
 
+    @Ignore
+    public Book(){}
 
     public Book(String title, String author, String publisher, String yearOfPublishing, int rating, String description) {
         this.title = title;
@@ -92,7 +95,7 @@ public class Book {
         this.firebaseKey = firebaseKey;
     }
 
-    public String getMainInformation() {
+    public String mainInfo(){
         return "Title: " + title + "\n Author: " + author + "\n Rating: " + rating;
     }
 

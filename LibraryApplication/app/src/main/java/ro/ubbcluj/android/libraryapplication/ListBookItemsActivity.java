@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +57,9 @@ public class ListBookItemsActivity extends AppCompatActivity {
                 mAuth.signOut();
             }
         });
+
+        TextView textView=(TextView) findViewById(R.id.connectionTextView);
+        textView.setText(mAuth.getCurrentUser().getEmail());
 
         if (Globals.bookRepository == null) {
             AppDatabase appDatabase = AppDatabase.getAppDatabase(getApplicationContext());

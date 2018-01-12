@@ -36,13 +36,25 @@ public class BookRepository {
     }
 
     public void add(final Book book) {
-        repo.add(book);
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                appDatabase.bookDao().insertAll(book);
+
+        boolean flag=false;
+
+        for(Book b: repo){
+            if(book.getFirebaseKey().equals(b.getFirebaseKey())){
+                flag=true;
             }
-        });
+        }
+
+        if(!flag){
+            repo.add(book);
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    appDatabase.bookDao().insertAll(book);
+                }
+            });
+        }
+
     }
 
     public void update(final Book book) {

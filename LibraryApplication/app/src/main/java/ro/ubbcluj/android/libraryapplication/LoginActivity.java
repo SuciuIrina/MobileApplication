@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private GoogleApiClient mGoogleApiClient;
 
+    private GoogleSignInClient mGoogleSignInClient;
+
     private static final String TAG = "LoginActivity";
 
 
@@ -40,13 +44,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        // [START initialize_auth]
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(LoginActivity.this, ListBookItemsActivity.class));
+                    Log.w("USER", mAuth.getCurrentUser().getEmail());
+
+                    if (mAuth.getCurrentUser().getEmail().equals("suciuirina97@gmail.com")) {
+                        startActivity(new Intent(LoginActivity.this, ListBookItemsActivity.class));
+                    }else{
+                        startActivity(new Intent(LoginActivity.this, UserListBookItemsActivity.class));
+                    }
                 }
             }
         };
@@ -57,6 +72,8 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
@@ -123,4 +140,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
 }

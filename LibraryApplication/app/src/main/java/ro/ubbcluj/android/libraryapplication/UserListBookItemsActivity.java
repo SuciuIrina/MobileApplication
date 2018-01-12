@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -88,6 +89,16 @@ public class UserListBookItemsActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1, Globals.getMainInformationBooks());
         Globals.setBookAdapter(bookAdapter);
         listViewBooks.setAdapter(Globals.getBookAdapter());
+
+        listViewBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(UserListBookItemsActivity.this, UserBookDetailActivity.class);
+                intent.putExtra("BOOK_DETAIL", position);
+                startActivity(intent);
+
+            }
+        });
 
         final FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference ref=database.getReference("server");

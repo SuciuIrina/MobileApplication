@@ -46,6 +46,10 @@ public class AddBookActivity extends AppCompatActivity {
             FirebaseServiceBooks firebaseServiceBooks=new FirebaseServiceBooks();
             firebaseServiceBooks.addBook(newBook);
 
+            Globals.bookRepository.add(newBook);
+            Globals.getMainInformationBooks().add(newBook.mainInfo());
+            Globals.getBookAdapter().notifyDataSetChanged();
+            finish();
         }
 
     }

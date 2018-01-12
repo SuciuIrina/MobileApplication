@@ -32,7 +32,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".UserListBookItemsActivity"></activity>
+        <activity android:name=".UserListBookItemsActivity" />
+        <activity android:name=".UserBookDetailActivity"></activity>
     </application>
 
 </manifest>

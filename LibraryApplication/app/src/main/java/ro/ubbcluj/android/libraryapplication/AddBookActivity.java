@@ -3,14 +3,16 @@ package ro.ubbcluj.android.libraryapplication;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import ro.ubbcluj.android.libraryapplication.firebase.FirebaseServiceBooks;
 import ro.ubbcluj.android.libraryapplication.model.Book;
@@ -126,10 +128,20 @@ public class AddBookActivity extends AppCompatActivity {
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = year + "-" + month + "-" + day;
+                String date = formatDate(year, month, day);
                 dateTextView.setText(date);
             }
         };
+    }
+
+    private static String formatDate(int year, int month, int day) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+        cal.set(year, month, day);
+        Date date = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return sdf.format(date);
     }
 }

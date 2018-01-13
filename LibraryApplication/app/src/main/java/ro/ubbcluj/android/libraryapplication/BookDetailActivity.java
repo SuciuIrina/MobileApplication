@@ -5,27 +5,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 import ro.ubbcluj.android.libraryapplication.firebase.FirebaseServiceBooks;
 import ro.ubbcluj.android.libraryapplication.model.Book;
-import ro.ubbcluj.android.libraryapplication.model.Whishlist;
 import ro.ubbcluj.android.libraryapplication.utils.Globals;
 
 public class BookDetailActivity extends AppCompatActivity {
@@ -210,8 +203,7 @@ public class BookDetailActivity extends AppCompatActivity {
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = year + "-" + month + "-" + day;
+                String date = formatDate(year,month,day);
                 dateTextView.setText(date);
             }
         };
@@ -221,5 +213,16 @@ public class BookDetailActivity extends AppCompatActivity {
         Intent intent=new Intent(this,ViewChartActivity.class);
         intent.putExtra("BOOK_POSITION",position);
         startActivity(intent);
+    }
+
+    private static String formatDate(int year, int month, int day) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+        cal.set(year, month, day);
+        Date date = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return sdf.format(date);
     }
 }

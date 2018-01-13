@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import {
     AsyncStorage,
     Button,
@@ -12,6 +13,7 @@ import {
 import BookDetailComponent from "./BookDetailComponent";
 import AddBookComponent from "./AddBookComponent";
 import BookDetailManagerComponent from "./BookDetailMangerComponent";
+import LoginComponent from "./LoginComponent";
 
 export default class App extends Component<{}> {
     constructor(props) {
@@ -142,18 +144,26 @@ export default class App extends Component<{}> {
                             onPress={() => this.setAddBookView()}
                         />
                     </View>
+
                     <View style={{width: 130, padding: 5}}>
                         <Button
                             style={styles.buttonStyle}
-                            title={"Delete all"}
+                            title={"Sign out"}
                             color="#841584"
-                            onPress={() => this.alertDialogShow()}
+                            onPress={() => this.signOut()}
                         />
                     </View>
+
                 </View>
             </View>
         );
 
+    }
+
+    signOut(){
+        this.props.signOut();
+        newElement=<LoginComponent/>;
+        this.setState({viewElement:newElement});
     }
 
     addNewBook(book) {
@@ -186,6 +196,7 @@ export default class App extends Component<{}> {
         />;
         this.setState({viewElement: newElement});
     }
+
 
     setDetailView(bookId) {
         book = this.state.books.find(b => b.id === bookId);

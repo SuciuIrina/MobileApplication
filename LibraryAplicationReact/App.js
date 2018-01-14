@@ -30,19 +30,19 @@ export default class App extends Component<{}> {
         this.addNewBook = this.addNewBook.bind(this);
         this.deleteBook = this.deleteBook.bind(this);
         this.alertDialogShow = this.alertDialogShow.bind(this);
-        this.getUsersHarcodated=this.getUsersHarcodated.bind(this);
-        this.getWishListHarcodated=this.getWishListHarcodated.bind(this);
+        this.getUsersHarcodated = this.getUsersHarcodated.bind(this);
+        this.getWishListHarcodated = this.getWishListHarcodated.bind(this);
 
-        var users=this.getUsersHarcodated();
-        var whislist=this.getWishListHarcodated();
+        var users = this.getUsersHarcodated();
+        var whislist = this.getWishListHarcodated();
 
 
-        AsyncStorage.setItem('users',JSON.stringify(users));
-        AsyncStorage.setItem('whislist',JSON.stringify(whislist));
+        AsyncStorage.setItem('users', JSON.stringify(users));
+        AsyncStorage.setItem('whislist', JSON.stringify(whislist));
 
 
         viewElement = this.getBookListElements([]);
-        this.state = {books: [], viewElement: viewElement, whishlist:whislist}
+        this.state = {books: [], viewElement: viewElement, whishlist: whislist}
 
         const secondThis = this;
         AsyncStorage.getItem('books').then(v => {
@@ -62,6 +62,24 @@ export default class App extends Component<{}> {
         return books;
     }
 
+    componentDidMount() {
+        firebaseApp.database().ref().child('books').on('value',(childSnapshot)=>{
+            var updatedBookList=[];
+
+            childSnapshot.forEach(element=>{
+                updatedBookList.push(element.val());
+            })
+
+            console.log(updatedBookList);
+            newViewElement=this.getBookListElements(updatedBookList);
+            this.setState({books:updatedBookList, viewElement: newViewElement});
+        });
+    }
+
+    componentDidUnMount() {
+        firebaseApp.database().ref().child('books').off('value');
+    }
+
     alertDialogShow() {
         Alert.alert(
             'Confirm your choice',
@@ -75,7 +93,7 @@ export default class App extends Component<{}> {
     }
 
     getUsersHarcodated() {
-        return[
+        return [
             {id: 1, username: "ana", email: "anamaria@yahoo.com"},
             {id: 2, username: "andrei", email: "andreipopescu87@yahoo.com"},
             {id: 3, username: "alex", email: "alex@yahoo.com"},
@@ -86,32 +104,31 @@ export default class App extends Component<{}> {
         ];
     }
 
-    getWishListHarcodated(){
-        return[
-            {usernameId:1,bookId:1,date:"2017-12-01"},
-            {usernameId:2,bookId:1,date:"2017-12-01"},
-            {usernameId:3,bookId:1,date:"2017-12-02"},
-            {usernameId:4,bookId:1,date:"2017-12-03"},
-            {usernameId:5,bookId:1,date:"2017-12-04"},
-            {usernameId:6,bookId:1,date:"2017-12-04"},
-            {usernameId:7,bookId:1,date:"2017-12-04"},
-            {usernameId:1,bookId:2,date:"2017-12-01"},
-            {usernameId:2,bookId:2,date:"2017-12-01"},
-            {usernameId:3,bookId:2,date:"2017-12-01"},
-            {usernameId:4,bookId:2,date:"2017-12-02"},
-            {usernameId:5,bookId:2,date:"2017-12-03"},
-            {usernameId:6,bookId:2,date:"2017-12-06"},
-            {usernameId:7,bookId:2,date:"2017-12-06"},
-            {usernameId:1,bookId:3,date:"2017-12-03"},
-            {usernameId:2,bookId:3,date:"2017-12-03"},
-            {usernameId:3,bookId:3,date:"2017-12-03"},
-            {usernameId:4,bookId:3,date:"2017-12-04"},
-            {usernameId:5,bookId:3,date:"2017-12-05"},
-            {usernameId:6,bookId:3,date:"2017-12-05"},
-            {usernameId:7,bookId:3,date:"2017-12-06"}
+    getWishListHarcodated() {
+        return [
+            {usernameId: 1, bookId: 1, date: "2017-12-01"},
+            {usernameId: 2, bookId: 1, date: "2017-12-01"},
+            {usernameId: 3, bookId: 1, date: "2017-12-02"},
+            {usernameId: 4, bookId: 1, date: "2017-12-03"},
+            {usernameId: 5, bookId: 1, date: "2017-12-04"},
+            {usernameId: 6, bookId: 1, date: "2017-12-04"},
+            {usernameId: 7, bookId: 1, date: "2017-12-04"},
+            {usernameId: 1, bookId: 2, date: "2017-12-01"},
+            {usernameId: 2, bookId: 2, date: "2017-12-01"},
+            {usernameId: 3, bookId: 2, date: "2017-12-01"},
+            {usernameId: 4, bookId: 2, date: "2017-12-02"},
+            {usernameId: 5, bookId: 2, date: "2017-12-03"},
+            {usernameId: 6, bookId: 2, date: "2017-12-06"},
+            {usernameId: 7, bookId: 2, date: "2017-12-06"},
+            {usernameId: 1, bookId: 3, date: "2017-12-03"},
+            {usernameId: 2, bookId: 3, date: "2017-12-03"},
+            {usernameId: 3, bookId: 3, date: "2017-12-03"},
+            {usernameId: 4, bookId: 3, date: "2017-12-04"},
+            {usernameId: 5, bookId: 3, date: "2017-12-05"},
+            {usernameId: 6, bookId: 3, date: "2017-12-05"},
+            {usernameId: 7, bookId: 3, date: "2017-12-06"}
         ];
     }
-
 
 
     getBookListElements(books) {
@@ -161,30 +178,33 @@ export default class App extends Component<{}> {
 
     }
 
-    signOut(){
+    signOut() {
         firebaseApp.auth().signOut();
-        newElement=<LoginComponent/>;
-        this.setState({viewElement:newElement});
+        newElement = <LoginComponent/>;
+        this.setState({viewElement: newElement});
     }
 
     addNewBook(book) {
         var books = this.state.books.slice();
 
         let key = firebaseApp.database().ref().child('books').push().key;
-        firebaseApp.database().ref('books').child(key).update({
-            firebaseKey: key,
-            title:book.title,
-            author:book.author,
-            publisher:book.publisher,
-            date:book.date,
-            rating:book.rating,
-            description:book.description
-        });
+        try {
+            firebaseApp.database().ref('books').child(key).update({
+                firebaseKey: key,
+                title: book.title,
+                author: book.author,
+                publisher: book.publisher,
+                date: book.date,
+                rating: book.rating,
+                description: book.description
+            });
+        } catch (err) {
+        }
 
         AsyncStorage.getItem('counter').then(v => {
             var newCounter = parseInt(v) + 1;
             book.id = newCounter;
-            book.firebaseKey=key;
+            book.firebaseKey = key;
             books.push(book);
             AsyncStorage.setItem('counter', "" + newCounter);
             AsyncStorage.setItem('books', JSON.stringify(books));
@@ -193,8 +213,11 @@ export default class App extends Component<{}> {
 
     }
 
-    deleteBook(bookId,firebaseKey) {
-        firebaseApp.database().ref().child('books').child(firebaseKey).remove();
+    deleteBook(bookId, firebaseKey) {
+        try {
+            firebaseApp.database().ref().child('books').child(firebaseKey).remove();
+        } catch (err) {
+        }
 
         let filteredBooks = this.state.books;
         filteredBooks = filteredBooks.filter(element => element.id != bookId);
@@ -222,8 +245,8 @@ export default class App extends Component<{}> {
 
 
     getBookDetailComponent(book) {
-        var list=this.state.whishlist;
-        list=list.filter(element=> element.bookId==book.id);
+        var list = this.state.whishlist;
+        list = list.filter(element => element.bookId == book.id);
         return <BookDetailManagerComponent
             wishlist={list}
             book={book}
@@ -240,8 +263,9 @@ export default class App extends Component<{}> {
     }
 
     handleUpdate(book) {
-        console.log(book);
-        firebaseApp.database().ref("books").child(book.firebaseKey).update(book);
+        try {
+            firebaseApp.database().ref("books").child(book.firebaseKey).update(book);
+        }catch(err){}
         newBooks = this.state.books;
         newBooks[newBooks.findIndex(el => el.id === book.id)] = book;
         AsyncStorage.setItem('books', JSON.stringify(newBooks));

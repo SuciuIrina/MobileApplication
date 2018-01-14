@@ -63,16 +63,16 @@ export default class App extends Component<{}> {
     }
 
     componentDidMount() {
-        firebaseApp.database().ref().child('books').on('value',(childSnapshot)=>{
-            var updatedBookList=[];
+        firebaseApp.database().ref().child('books').on('value', (childSnapshot) => {
+            var updatedBookList = [];
 
-            childSnapshot.forEach(element=>{
+            childSnapshot.forEach(element => {
                 updatedBookList.push(element.val());
             })
 
             console.log(updatedBookList);
-            newViewElement=this.getBookListElements(updatedBookList);
-            this.setState({books:updatedBookList, viewElement: newViewElement});
+            newViewElement = this.getBookListElements(updatedBookList);
+            this.setState({books: updatedBookList, viewElement: newViewElement});
         });
     }
 
@@ -188,9 +188,12 @@ export default class App extends Component<{}> {
         var books = this.state.books.slice();
 
         let key = firebaseApp.database().ref().child('books').push().key;
-        try {
+
+        AsyncStorage.getItem('counter').then(v => {
+            var id = parseInt(v) + 1;
             firebaseApp.database().ref('books').child(key).update({
                 firebaseKey: key,
+                id:id,
                 title: book.title,
                 author: book.author,
                 publisher: book.publisher,
@@ -198,8 +201,7 @@ export default class App extends Component<{}> {
                 rating: book.rating,
                 description: book.description
             });
-        } catch (err) {
-        }
+        });
 
         AsyncStorage.getItem('counter').then(v => {
             var newCounter = parseInt(v) + 1;
@@ -265,7 +267,8 @@ export default class App extends Component<{}> {
     handleUpdate(book) {
         try {
             firebaseApp.database().ref("books").child(book.firebaseKey).update(book);
-        }catch(err){}
+        } catch (err) {
+        }
         newBooks = this.state.books;
         newBooks[newBooks.findIndex(el => el.id === book.id)] = book;
         AsyncStorage.setItem('books', JSON.stringify(newBooks));

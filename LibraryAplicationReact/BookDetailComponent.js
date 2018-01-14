@@ -20,7 +20,7 @@ export default class BookDetailComponent extends Component<{}> {
         this.alertDialogShow=this.alertDialogShow.bind(this);
 
         this.state = {
-            key:this.props.book.key,
+            firebaseKey:this.props.book.firebaseKey,
             id:this.props.book.id,
             title: this.props.book.title,
             author: this.props.book.author,
@@ -35,7 +35,7 @@ export default class BookDetailComponent extends Component<{}> {
 
     handleUpdate() {
         this.props.onUpdate({
-            key:this.props.book.key,
+            firebaseKey:this.props.book.firebaseKey,
             id: this.props.book.id,
             title: this.state.title,
             author: this.state.author,
@@ -58,7 +58,7 @@ export default class BookDetailComponent extends Component<{}> {
     }
 
     deleteBook() {
-        this.props.onDelete(this.props.book.id,this.props.book.key);
+        this.props.onDelete(this.props.book.id,this.props.book.firebaseKey);
     }
 
     alertDialogShow(){

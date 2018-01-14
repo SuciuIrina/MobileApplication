@@ -13,6 +13,7 @@ import {
 
 } from 'react-native';
 import {firebaseApp} from './components/FirebaseConfig';
+import UserBookList from "./UserBookList";
 
 
 export default class LoginComponent extends Component<{}> {
@@ -43,7 +44,7 @@ export default class LoginComponent extends Component<{}> {
     }
 
     componentWillMount() {
-        // firebaseApp.auth().signOut();
+        firebaseApp.auth().signOut();
         firebaseApp.auth().onAuthStateChanged((user) => {
             this.setState({
                 user: user,
@@ -110,9 +111,15 @@ export default class LoginComponent extends Component<{}> {
 
     render() {
         if(firebaseApp.auth().currentUser !=null){
-            return (
-                <App/>
-            )
+            if(firebaseApp.auth().currentUser.email=="irina@gmail.com") {
+                return (
+                    <App/>
+                )
+            }else{
+                return(
+                    <UserBookList/>
+                )
+            }
         }else{
             return(
                 <View style={styles.container}>

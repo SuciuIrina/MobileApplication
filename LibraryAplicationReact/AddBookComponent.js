@@ -8,6 +8,7 @@ import {
     Alert, TouchableHighlight, FlatList, TextInput, Linking
 } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+import {firebaseApp} from './components/FirebaseConfig';
 
 export default class AddBookComponent extends Component<{}> {
     constructor(props) {
@@ -26,6 +27,7 @@ export default class AddBookComponent extends Component<{}> {
     }
 
     addBook() {
+
         this.props.addBook({
             title: this.state.title,
             author: this.state.author,

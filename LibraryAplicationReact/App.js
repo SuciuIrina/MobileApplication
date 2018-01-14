@@ -14,6 +14,7 @@ import BookDetailComponent from "./BookDetailComponent";
 import AddBookComponent from "./AddBookComponent";
 import BookDetailManagerComponent from "./BookDetailMangerComponent";
 import LoginComponent from "./LoginComponent";
+import {firebaseApp} from './components/FirebaseConfig';
 
 export default class App extends Component<{}> {
     constructor(props) {
@@ -35,6 +36,7 @@ export default class App extends Component<{}> {
 
         var users=this.getUsersHarcodated();
         var whislist=this.getWishListHarcodated();
+
 
         AsyncStorage.setItem('users',JSON.stringify(users));
         AsyncStorage.setItem('whislist',JSON.stringify(whislist));
@@ -161,16 +163,29 @@ export default class App extends Component<{}> {
     }
 
     signOut(){
-        this.props.signOut();
+        firebaseApp.auth().signOut();
         newElement=<LoginComponent/>;
         this.setState({viewElement:newElement});
     }
 
     addNewBook(book) {
         var books = this.state.books.slice();
+
+        let key = firebaseApp.database().ref().child('books').push().key;
+        firebaseApp.database().ref('books').child(key).update({
+            key: key,
+            title:book.title,
+            author:book.author,
+            publisher:book.publisher,
+            date:book.date,
+            rating:book.rating,
+            description:book.description
+        });
+
         AsyncStorage.getItem('counter').then(v => {
             var newCounter = parseInt(v) + 1;
             book.id = newCounter;
+            book.key=key;
             books.push(book);
             AsyncStorage.setItem('counter', "" + newCounter);
             AsyncStorage.setItem('books', JSON.stringify(books));
@@ -179,7 +194,9 @@ export default class App extends Component<{}> {
 
     }
 
-    deleteBook(bookId) {
+    deleteBook(bookId,bookKey) {
+        firebaseApp.database().ref().child('books').child(book.key).remove();
+
         let filteredBooks = this.state.books;
         filteredBooks = filteredBooks.filter(element => element.id != bookId);
         this.setState({books: filteredBooks, viewElement: this.getBookListElements(filteredBooks)});
@@ -224,6 +241,8 @@ export default class App extends Component<{}> {
     }
 
     handleUpdate(book) {
+        console.log(book);
+        firebaseApp.database().ref("books").child(book.key).update(book);
         newBooks = this.state.books;
         newBooks[newBooks.findIndex(el => el.id === book.id)] = book;
         AsyncStorage.setItem('books', JSON.stringify(newBooks));

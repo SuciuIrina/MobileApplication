@@ -20,6 +20,8 @@ export default class BookDetailComponent extends Component<{}> {
         this.alertDialogShow=this.alertDialogShow.bind(this);
 
         this.state = {
+            key:this.props.book.key,
+            id:this.props.book.id,
             title: this.props.book.title,
             author: this.props.book.author,
             publisher: this.props.book.publisher,
@@ -27,10 +29,13 @@ export default class BookDetailComponent extends Component<{}> {
             rating: this.props.book.rating + "",
             description: this.props.book.description
         };
+
+        console.log(this.state);
     }
 
     handleUpdate() {
         this.props.onUpdate({
+            key:this.props.book.key,
             id: this.props.book.id,
             title: this.state.title,
             author: this.state.author,
@@ -53,7 +58,7 @@ export default class BookDetailComponent extends Component<{}> {
     }
 
     deleteBook() {
-        this.props.onDelete(this.props.book.id);
+        this.props.onDelete(this.props.book.id,this.props.book.key);
     }
 
     alertDialogShow(){

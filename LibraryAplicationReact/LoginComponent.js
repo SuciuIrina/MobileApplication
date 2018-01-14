@@ -1,4 +1,4 @@
-import * as firebase from "firebase";
+
 import React, {Component} from 'react';
 import {Input} from "./components/Input";
 import {Button} from "./components/Button";
@@ -12,6 +12,8 @@ import {
     Alert
 
 } from 'react-native';
+import {firebaseApp} from './components/FirebaseConfig';
+
 
 export default class LoginComponent extends Component<{}> {
 
@@ -21,19 +23,18 @@ export default class LoginComponent extends Component<{}> {
         this.renderCurrentState = this.renderCurrentState.bind(this);
         this.onPressSignIn = this.onPressSignIn.bind(this);
         this.onPressRegister = this.onPressRegister.bind(this);
-        this.signOut=this.signOut.bind(this);
 
         this.state = {
             email: '',
             password: '',
-            authenticating: false,
-            user: ''
+            user:null,
+            authenticating:false
         }
     }
 
     componentDidMount() {
-        this.setState({user:null})
-        firebase.auth().onAuthStateChanged((user) => {
+
+        firebaseApp.auth().onAuthStateChanged((user) => {
             this.setState({
                 user: user,
                 authenticating: true
@@ -42,23 +43,8 @@ export default class LoginComponent extends Component<{}> {
     }
 
     componentWillMount() {
-        const firebaseConfig = {
-            apiKey: "AIzaSyAc-TFsLb2iyfxSYXahj1CdgVxUiwaIAFw",
-            authDomain: "libraryapplicationreact.firebaseapp.com",
-            databaseURL: "https://libraryapplicationreact.firebaseio.com",
-            projectId: "libraryapplicationreact",
-            storageBucket: "libraryapplicationreact.appspot.com",
-            messagingSenderId: "511352699114"
-        }
-
-        try {
-            firebase.initializeApp(firebaseConfig);
-        }catch(err){
-            
-        }
-
-        firebase.auth().signOut();
-        firebase.auth().onAuthStateChanged((user) => {
+        // firebaseApp.auth().signOut();
+        firebaseApp.auth().onAuthStateChanged((user) => {
             this.setState({
                 user: user,
                 authenticating: true
@@ -67,7 +53,7 @@ export default class LoginComponent extends Component<{}> {
     }
 
     onPressSignIn() {
-        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .catch((error) => {
             const {code, message} = error;
             Alert.alert(
@@ -83,7 +69,7 @@ export default class LoginComponent extends Component<{}> {
     }
 
     onPressRegister() {
-        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        firebaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .catch((error) => {
             const {code, message} = error;
             Alert.alert(
@@ -121,15 +107,11 @@ export default class LoginComponent extends Component<{}> {
 
     }
 
-    signOut(){
-        firebase.auth().signOut();
-    }
+
     render() {
-        if(firebase.auth().currentUser !=null){
+        if(firebaseApp.auth().currentUser !=null){
             return (
-                <App
-                    signOut={this.signOut}
-                />
+                <App/>
             )
         }else{
             return(
